@@ -4,7 +4,7 @@ namespace AkshanshKanoji.PluginManager
 {
     public class PluginToolEditor : EditorWindow
     {
-        [MenuItem("Akshansh/Generate Plugin Manager")]
+        [MenuItem("Akshansh/Open Plugin Manager")]
         static void GeneratePluginManager()
         {
             EditorWindow _window = GetWindow<PluginToolEditor>();
