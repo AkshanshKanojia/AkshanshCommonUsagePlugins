@@ -32,8 +32,12 @@ namespace AkshanshKanojia.PluginManager
             if (GUILayout.Button("Generate Mobile Input", GUILayout.Width(150), GUILayout.Height(20)))
             {
                 GameObject _tempObj = new GameObject("Mobile Input manager");
-                _tempObj.AddComponent<MobileInputManager>();
+                _tempObj.AddComponent<MobileInputs>();
                 Debug.Log("Generated Mobile Input Manager Dummy Object!");
+            }
+            if (GUILayout.Button("Generate Character Manager", GUILayout.Width(100), GUILayout.Height(20)))
+            {
+                GetWindow<PluginToolEditor>().Close();
             }
             if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
             {

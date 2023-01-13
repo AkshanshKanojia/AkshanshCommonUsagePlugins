@@ -3,7 +3,7 @@ namespace AkshanshKanojia.Inputs.Mobile
 {
     public abstract class MobileInputs:MonoBehaviour
     {
-        private void Start()
+        public virtual void Start()
         {
             MobileInputManager mang = FindObjectOfType<MobileInputManager>();
             if(mang)
