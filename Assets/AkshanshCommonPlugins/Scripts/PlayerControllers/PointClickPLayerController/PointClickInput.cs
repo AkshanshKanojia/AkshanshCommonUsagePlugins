@@ -25,6 +25,11 @@ namespace AkshanshKanojia.Controllers.PointClick
         {
             if(Physics.Raycast(Camera.main.ScreenPointToRay(_data.TouchPosition),out RaycastHit _hit))
             {
+                if(!clickMang)
+                {
+                    Debug.LogError("Can't find Point Click Manager! Make sure it is attached to a gameobject in scene.");
+                    return;
+                }
                 clickMang.SetTarget(_hit.point);
             }
         }

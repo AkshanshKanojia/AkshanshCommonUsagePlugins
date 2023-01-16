@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using AkshanshKanojia.Inputs.Mobile;
+using AkshanshKanojia.Controllers;
 namespace AkshanshKanojia.PluginManager
 {
     public class PluginToolEditor : EditorWindow
@@ -32,17 +33,24 @@ namespace AkshanshKanojia.PluginManager
             if (GUILayout.Button("Generate Mobile Input", GUILayout.Width(150), GUILayout.Height(20)))
             {
                 GameObject _tempObj = new GameObject("Mobile Input manager");
-                _tempObj.AddComponent<MobileInputs>();
+                _tempObj.AddComponent<MobileInputManager>();
                 Debug.Log("Generated Mobile Input Manager Dummy Object!");
             }
-            if (GUILayout.Button("Generate Character Manager", GUILayout.Width(100), GUILayout.Height(20)))
+            if (GUILayout.Button("Generate Character Manager", GUILayout.Width(200), GUILayout.Height(20)))
             {
-                GetWindow<PluginToolEditor>().Close();
+                if(FindObjectOfType<CharacterSetupManager>())
+                {
+                    Debug.LogWarning("Character Setup Manager already exist!");
+                    return;
+                }
+                var _tempObj = new GameObject("Character Manager");
+                _tempObj.AddComponent<CharacterSetupManager>();
             }
             if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
             {
                 GetWindow<PluginToolEditor>().Close();
             }
+            EditorGUILayout.LabelField("Still Under Very Early Development!");
         }
     }
 }

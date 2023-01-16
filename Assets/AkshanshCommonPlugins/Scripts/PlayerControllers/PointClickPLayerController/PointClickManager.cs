@@ -71,6 +71,7 @@ namespace AkshanshKanojia.Controllers.PointClick
             if(_tempDir.magnitude<0.2f)
             {
                 isTracking = false;
+                OnReached?.Invoke();
             }
 
             //rotation
