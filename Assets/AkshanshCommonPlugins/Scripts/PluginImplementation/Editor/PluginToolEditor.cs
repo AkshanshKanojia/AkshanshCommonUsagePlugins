@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using AkshanshKanojia.Inputs.Mobile;
 using AkshanshKanojia.Controllers;
+using AkshanshKanojia.Controllers.CameraController;
 namespace AkshanshKanojia.PluginManager
 {
     public class PluginToolEditor : EditorWindow
@@ -45,6 +46,30 @@ namespace AkshanshKanojia.PluginManager
                 }
                 var _tempObj = new GameObject("Character Manager");
                 _tempObj.AddComponent<CharacterSetupManager>();
+            }
+            if (GUILayout.Button("Generate Camera Manager", GUILayout.Width(200), GUILayout.Height(20)))
+            {
+                if (FindObjectOfType<Camera>())
+                {
+                    if (FindObjectOfType<Camera>().GetComponent<CameraManager>())
+                    {
+                        Debug.LogWarning("Camera already have camera manager component!");
+                        return;
+                    }
+                }
+                if (FindObjectOfType<Camera>())
+                {
+                    FindObjectOfType<Camera>().gameObject.AddComponent<CameraManager>();
+                    Debug.Log("Added Camera Manager to existing camera: "+FindObjectOfType<CameraManager>().name);
+                }
+                else
+                {
+                    var _tempObj = new GameObject("Camera Manager");
+                    _tempObj.AddComponent<Camera>();
+                    _tempObj.AddComponent<CameraManager>();
+                    Debug.Log("Added Camera Manager Object");
+
+                }
             }
             if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
             {
