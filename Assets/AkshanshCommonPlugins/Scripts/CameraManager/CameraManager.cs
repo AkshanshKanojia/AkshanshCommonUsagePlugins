@@ -19,14 +19,14 @@ namespace AkshanshKanojia.Controllers.CameraController
 
         //behaviour properties
         public bool IsPaused = false;
-        [HideInInspector] public GameObject CurrentTargetObj;
+        [HideInInspector] public GameObject CurrentTargetObj,CurrentRotObject;
+        [HideInInspector]public bool SeprateRotationTarget;
         [HideInInspector] public enum AvailableBehaviours { Track, Rotate, TrackAndRotate }
         [HideInInspector] public AvailableBehaviours CameraBehaviour;
         //movement properties
         [HideInInspector] public enum AvailableTrackAxis { X, Y, Z, XY, XZ, YZ, XYZ }
         [HideInInspector] public AvailableTrackAxis curtTrackAxis;
         [HideInInspector] public float moveSpeed = 1.5f, trackBeginDistance = 1f, trackStopDistance = 0.2f;
-        [HideInInspector, Tooltip("Detrmine if can change direction while moving")] public bool overrideTargetWhileMoving = true;
 
         //rotation properties
         [HideInInspector] public float RotSpeed = 2f;
@@ -44,17 +44,17 @@ namespace AkshanshKanojia.Controllers.CameraController
 
         private void Update()
         {
-            if (!IsPaused)
+            if (!IsPaused && TrackObject)
             {
                 TargetManager();
             }
         }
 
-        private void FixedUpdate()
+        private void LateUpdate()
         {
             if (!IsPaused)
             {
-                if (isTracking)
+                if (isTracking&&TrackObject)
                     TrackTarget();
                 if (isRotating)
                     RotationManager();
@@ -140,7 +140,10 @@ namespace AkshanshKanojia.Controllers.CameraController
 
         private void RotationManager()
         {
-            Vector3 _tempDir = curtTarget - transform.position;
+            GameObject _tempObj = (SeprateRotationTarget) ? CurrentRotObject : 
+                CurrentTargetObj;
+            _tempObj = (_tempObj) ? _tempObj : CurrentTargetObj;//if user forget to assign rotation property
+            Vector3 _tempDir = _tempObj.transform.position - transform.position;
             transform.rotation = Quaternion.Slerp(Quaternion.Euler(transform.eulerAngles), Quaternion.LookRotation(_tempDir),
                 Time.deltaTime * RotSpeed);
             Vector3 _tempRotAxis = transform.eulerAngles;
@@ -186,8 +189,6 @@ namespace AkshanshKanojia.Controllers.CameraController
 
         public void SetTarget(Vector3 _dir)
         {
-            if (!overrideTargetWhileMoving && isTracking)
-                return;
             curtTarget = _dir;
             isTracking = true;
         }

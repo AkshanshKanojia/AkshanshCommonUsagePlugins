@@ -1,5 +1,4 @@
 using UnityEngine;
-using AkshanshKanojia.Inputs.Mobile;
 
 namespace AkshanshKanojia.Controllers.PointClick
 {
@@ -23,8 +22,8 @@ namespace AkshanshKanojia.Controllers.PointClick
         [HideInInspector] public float RotSpeed = 2f;
         public enum RotationOptions { X, Y, Z, XY, XZ,YZ, XYZ }
         [HideInInspector] public RotationOptions RotationAxis;
-        [HideInInspector] public bool ClampRotation = false;
-        [HideInInspector] public Vector3 MinRotationClamp, MaxRotationClamp;
+        [HideInInspector] public bool ClampRotation = false,ClampLocation = false;
+        [HideInInspector] public Vector3 MinRotationClamp, MaxRotationClamp,MinPosClamp,MaxPosClamp;
 
         //events
         public delegate void HasReachedDestination();
@@ -68,6 +67,40 @@ namespace AkshanshKanojia.Controllers.PointClick
                     break;
             }
             transform.position += moveSpeed * Time.deltaTime * _tempDir.normalized;
+            if (ClampLocation)
+            {
+                Vector3 _tempPlayerPos = transform.position;
+                switch (curtTrackAxis)
+                {
+                    case AvailableTrackAaxis.X:
+                        _tempPlayerPos.x = CustomClamp(_tempPlayerPos.x, MinPosClamp.x, MaxPosClamp.x, 0);
+                        break;
+                    case AvailableTrackAaxis.Y:
+                        _tempPlayerPos.y = CustomClamp(_tempPlayerPos.y, MinPosClamp.y, MaxPosClamp.y, 1);
+                        break;
+                    case AvailableTrackAaxis.Z:
+                        _tempPlayerPos.z = CustomClamp(_tempPlayerPos.z, MinPosClamp.z, MaxPosClamp.z, 2);
+                        break;
+                    case AvailableTrackAaxis.XY:
+                        _tempPlayerPos.x = CustomClamp(_tempPlayerPos.x, MinPosClamp.x, MaxPosClamp.x, 0);
+                        _tempPlayerPos.y = CustomClamp(_tempPlayerPos.y, MinPosClamp.y, MaxPosClamp.y, 1);
+                        break;
+                    case AvailableTrackAaxis.XZ:
+                        _tempPlayerPos.x = CustomClamp(_tempPlayerPos.x, MinPosClamp.x, MaxPosClamp.x, 0);
+                        _tempPlayerPos.z = CustomClamp(_tempPlayerPos.z, MinPosClamp.z, MaxPosClamp.z, 2);
+                        break;
+                    case AvailableTrackAaxis.YZ:
+                        _tempPlayerPos.y = CustomClamp(_tempPlayerPos.y, MinPosClamp.y, MaxPosClamp.y, 1);
+                        _tempPlayerPos.z = CustomClamp(_tempPlayerPos.z, MinPosClamp.z, MaxPosClamp.z, 2);
+                        break;
+                    default:
+                        _tempPlayerPos.x = CustomClamp(_tempPlayerPos.x, MinPosClamp.x, MaxPosClamp.x, 0);
+                        _tempPlayerPos.y = CustomClamp(_tempPlayerPos.y, MinPosClamp.y, MaxPosClamp.y, 1);
+                        _tempPlayerPos.z = CustomClamp(_tempPlayerPos.z, MinPosClamp.z, MaxPosClamp.z, 2);
+                        break;
+                }
+                transform.position = _tempPlayerPos;
+            }
             if(_tempDir.magnitude<0.2f)
             {
                 isTracking = false;
@@ -76,6 +109,38 @@ namespace AkshanshKanojia.Controllers.PointClick
 
             //rotation
             RotationManager(_tempDir);
+        }
+
+        void ClampedValue(int _axisIndex)
+        {
+            switch(_axisIndex)
+            {
+                case 0:
+                    curtTarget.x = transform.position.x;
+                    break;
+                case 1:
+                    curtTarget.y = transform.position.y;
+                    break;
+                case 2:
+                    curtTarget.z = transform.position.z;
+                    break;
+                default:
+                    break;
+            }
+        }
+        float CustomClamp(float _pos,float _min,float _max,int _axisIndex)//for getting event when clamped
+        {
+            if (_pos < _min)
+            {
+                ClampedValue(_axisIndex);
+                return _min;
+            }
+            if (_pos > _max)
+            {
+                ClampedValue(_axisIndex);
+                return _max;
+            }
+            return _pos;
         }
 
         private void RotationManager(Vector3 _tempDir)

@@ -10,6 +10,14 @@ namespace AkshanshKanojia.Controllers.PointClick
         {
             DrawDefaultInspector();
             var _tempMang = (PointClickManager)target;
+            #region Location Properties
+            _tempMang.ClampLocation = EditorGUILayout.Toggle("Clamp Location",_tempMang.ClampLocation);
+            if(_tempMang.ClampLocation)
+            {
+                _tempMang.MinPosClamp = EditorGUILayout.Vector3Field("Min Pos Clamp", _tempMang.MinPosClamp);
+                _tempMang.MaxPosClamp = EditorGUILayout.Vector3Field("Max Pos Clamp", _tempMang.MaxPosClamp);
+            }
+            #endregion
             #region Rotation Properties
             if (_tempMang.RotatePlayerWhileMoving)
             {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AkshanshKanojia.Inputs.Mobile;
 using AkshanshKanojia.Controllers;
 using AkshanshKanojia.Controllers.CameraController;
+using AkshanshKanojia.Controllers.ObjectManager;
 namespace AkshanshKanojia.PluginManager
 {
     public class PluginToolEditor : EditorWindow
@@ -71,7 +72,13 @@ namespace AkshanshKanojia.PluginManager
 
                 }
             }
-            if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
+            if (GUILayout.Button("Generate Object Controller", GUILayout.Width(200), GUILayout.Height(20)))
+            {
+                GameObject _tempObj = new GameObject("Object Controller");
+                _tempObj.AddComponent<ObjectController>();
+                Debug.Log("Generated Object Controller!");
+            }
+                if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
             {
                 GetWindow<PluginToolEditor>().Close();
             }

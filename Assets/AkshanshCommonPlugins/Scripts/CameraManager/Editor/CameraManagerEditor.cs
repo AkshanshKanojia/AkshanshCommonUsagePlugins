@@ -18,6 +18,12 @@ namespace AkshanshKanojia.Controllers.CameraController
                         ("Camera Behaviour", "Detrmines how camera will react toward target"), _tempMang.CameraBehaviour);
                     _tempMang.CurrentTargetObj = (GameObject)EditorGUILayout.ObjectField("Target Object", _tempMang.CurrentTargetObj,
                     typeof(GameObject), true);
+                    _tempMang.SeprateRotationTarget = EditorGUILayout.Toggle("Seprate Rotation Target",_tempMang.SeprateRotationTarget);
+                    if(_tempMang.SeprateRotationTarget)
+                    {
+                        _tempMang.CurrentRotObject = (GameObject)EditorGUILayout.ObjectField("Rotation Target", _tempMang.CurrentRotObject,
+                    typeof(GameObject), true);
+                    }
                 }
                 #region Movement Properties
                 GUILayout.Label("Movement Properties");
