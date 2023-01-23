@@ -8,6 +8,7 @@ namespace AkshanshKanojia.Inputs.Button
     {
         [SerializeField] enum AvailableObjectTypes { UIObject, Object2d, Object3d }
         [SerializeField] AvailableObjectTypes CurtType;
+        [SerializeField] LayerMask RaycastLayer;
 
         //events
         public delegate void OnButtonTapped(GameObject _obj);
@@ -17,8 +18,22 @@ namespace AkshanshKanojia.Inputs.Button
         public event OnButtonHeld OnHeld;
         public event OnButtonTapEnd OnLeft;
 
-        bool isTapped = false;
+        bool isTapped = false,isHeld = false;
+
+        private void OnDisable()
+        {
+            isTapped = false;
+            isHeld = false;
+        }
         #region Inputs
+
+        private void Update()
+        {
+            if(isHeld)
+            {
+                OnHeld?.Invoke(gameObject);
+            }
+        }
         public override void OnTapEnd(MobileInputManager.TouchData _data)
         {
             switch (CurtType)
@@ -44,7 +59,7 @@ namespace AkshanshKanojia.Inputs.Button
             switch (CurtType)
             {
                 case AvailableObjectTypes.Object2d:
-                    RaycastHit2D _hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(_data.TouchPosition));
+                    RaycastHit2D _hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(_data.TouchPosition),Mathf.Infinity,RaycastLayer);
                     if (_hit)
                     {
                         if (_hit.collider == GetComponent<Collider>())
@@ -55,7 +70,7 @@ namespace AkshanshKanojia.Inputs.Button
                     }
                     break;
                 case AvailableObjectTypes.Object3d:
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(_data.TouchPosition), out RaycastHit _tempHit))
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(_data.TouchPosition), out RaycastHit _tempHit,Mathf.Infinity,RaycastLayer))
                     {
                         if (_tempHit.collider == GetComponent<Collider>())
                         {
@@ -76,7 +91,7 @@ namespace AkshanshKanojia.Inputs.Button
                 case AvailableObjectTypes.Object2d:
                     if (!isTapped)
                         return;
-                    RaycastHit2D _hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(_data.TouchPosition));
+                    RaycastHit2D _hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(_data.TouchPosition),Mathf.Infinity,RaycastLayer);
                     if (_hit)
                     {
                         if (_hit.collider == GetComponent<Collider>())
@@ -96,7 +111,7 @@ namespace AkshanshKanojia.Inputs.Button
                 case AvailableObjectTypes.Object3d:
                     if (!isTapped)
                         return;
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(_data.TouchPosition), out RaycastHit _tempHit))
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(_data.TouchPosition), out RaycastHit _tempHit,Mathf.Infinity,RaycastLayer))
                     {
                         if (_tempHit.collider == GetComponent<Collider>())
                         {
@@ -130,6 +145,7 @@ namespace AkshanshKanojia.Inputs.Button
             if (CurtType == AvailableObjectTypes.UIObject)
             {
                 OnLeft?.Invoke(gameObject);
+                isHeld = false;
             }
         }
 
@@ -137,7 +153,7 @@ namespace AkshanshKanojia.Inputs.Button
         {
             if (CurtType == AvailableObjectTypes.UIObject)
             {
-                OnHeld?.Invoke(gameObject);
+                isHeld = true;
             }
         }
         #endregion

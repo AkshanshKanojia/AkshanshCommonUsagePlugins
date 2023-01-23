@@ -30,6 +30,12 @@ namespace AkshanshKanojia.Controllers.PointClick
                     _tempMang.MinRotationClamp = EditorGUILayout.Vector3Field("MinRotationClamp", _tempMang.MinRotationClamp);
                     _tempMang.MaxRotationClamp = EditorGUILayout.Vector3Field("MaxRotationClamp", _tempMang.MaxRotationClamp);
                 }
+                _tempMang.SeprateRotBody = EditorGUILayout.Toggle("Seprate Rotation Object", _tempMang.SeprateRotBody);
+                if(_tempMang.SeprateRotBody)
+                {
+                    _tempMang.RotObj = (GameObject)EditorGUILayout.ObjectField("Rotation Body",_tempMang.RotObj,typeof(GameObject)
+                        , true);
+                }
             }
             #endregion
         }

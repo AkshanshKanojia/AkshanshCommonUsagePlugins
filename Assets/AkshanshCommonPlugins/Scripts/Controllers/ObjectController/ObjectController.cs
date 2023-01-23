@@ -6,7 +6,7 @@ namespace AkshanshKanojia.Controllers.ObjectManager
     public class ObjectController : MonoBehaviour
     {
         [System.Serializable]
-        public class ActionHolder
+         class ActionHolder
         {
             public GameObject TargetObject;
             public Vector3 targetLocation;
@@ -41,13 +41,18 @@ namespace AkshanshKanojia.Controllers.ObjectManager
             }
         }
 
-        public List<ActionHolder> ActiveEvents;
+        List<ActionHolder> ActiveEvents;
 
         //events
         public delegate void RotationFinished(GameObject _obj);
         public delegate void MovementFinished(GameObject _obj);
         public event RotationFinished OnRotationEnd;
         public event MovementFinished OnMovementEnd;
+
+        private void Awake()
+        {
+            ActiveEvents = new List<ActionHolder>();
+        }
 
         private void FixedUpdate()
         {
@@ -116,6 +121,19 @@ namespace AkshanshKanojia.Controllers.ObjectManager
                     ActiveEvents.RemoveAt(i);
                 }
             }
+        }
+
+        public void AddEvent(GameObject _obj, Vector3 _targetPos, float _speed, bool _isLocal)
+        {
+            ActiveEvents.Add(new ActionHolder(_obj, _targetPos, _speed, _isLocal));
+        }
+        public void AddEvent(GameObject _obj, Quaternion _targetRot, float _speed, bool _isLocal)
+        {
+            ActiveEvents.Add(new ActionHolder(_obj, _targetRot, _speed, _isLocal));
+        }
+        public void AddEvent(GameObject _obj, Vector3 _targetPos, Quaternion _targetRot, float _speed, bool _isLocal)
+        {
+            ActiveEvents.Add(new ActionHolder(_obj, _targetPos,_targetRot, _speed, _isLocal));
         }
     } 
 }

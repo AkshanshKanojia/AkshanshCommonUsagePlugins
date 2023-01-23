@@ -25,6 +25,8 @@ namespace AkshanshKanojia.PluginManager
             {
                 AssetDatabase.CreateFolder("Assets", "Akshansh");
                 AssetDatabase.CreateFolder("Assets/Akshansh", "Scripts");
+                AssetDatabase.CreateFolder("Assets/Akshansh", "Scenes");
+                AssetDatabase.CreateFolder("Assets/Akshansh", "Audio");
                 AssetDatabase.CreateFolder("Assets/Akshansh", "Models");
                 AssetDatabase.CreateFolder("Assets/Akshansh", "Animations");
                 AssetDatabase.CreateFolder("Assets/Akshansh", "Prefabs");

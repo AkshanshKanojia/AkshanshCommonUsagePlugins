@@ -7,23 +7,24 @@ namespace AkshanshKanojia.Controllers.PointClick
         //this class manage player transforms based on inputs recived. Use this to extend for animators and collisions
         #region SerializeFields
         [SerializeField] float moveSpeed = 1.5f;
-        [SerializeField] enum AvailableTrackAaxis { X, Y, Z, XY, XZ,YZ, XYZ }
-        [SerializeField] AvailableTrackAaxis curtTrackAxis;
-        [SerializeField,Tooltip("Detrmine if can change direction while moving")] bool overrideTargetWhileMoving = true;
+        public enum AvailableTrackAaxis { X, Y, Z, XY, XZ, YZ, XYZ }
+        public AvailableTrackAaxis curtTrackAxis;
+        [SerializeField, Tooltip("Detrmine if can change direction while moving")] bool overrideTargetWhileMoving = true;
         #endregion
 
         #region PrivateFields
-        Vector3 curtTarget,tempRotationTarget;
+        Vector3 curtTarget, tempRotationTarget;
         bool isTracking = false;
         #endregion
 
         #region PublicFields
         public bool RotatePlayerWhileMoving;
         [HideInInspector] public float RotSpeed = 2f;
-        public enum RotationOptions { X, Y, Z, XY, XZ,YZ, XYZ }
+        public enum RotationOptions { X, Y, Z, XY, XZ, YZ, XYZ }
+        [HideInInspector] public GameObject RotObj;
         [HideInInspector] public RotationOptions RotationAxis;
-        [HideInInspector] public bool ClampRotation = false,ClampLocation = false;
-        [HideInInspector] public Vector3 MinRotationClamp, MaxRotationClamp,MinPosClamp,MaxPosClamp;
+        [HideInInspector] public bool ClampRotation = false, ClampLocation = false, SeprateRotBody = false;
+        [HideInInspector] public Vector3 MinRotationClamp, MaxRotationClamp, MinPosClamp, MaxPosClamp;
 
         //events
         public delegate void HasReachedDestination();
@@ -32,7 +33,7 @@ namespace AkshanshKanojia.Controllers.PointClick
 
         private void FixedUpdate()
         {
-            if(isTracking)
+            if (isTracking)
             {
                 TrackTarget();
             }
@@ -40,7 +41,7 @@ namespace AkshanshKanojia.Controllers.PointClick
         void TrackTarget()
         {
             Vector3 _tempDir = curtTarget - transform.position;
-            switch(curtTrackAxis)
+            switch (curtTrackAxis)
             {
                 case AvailableTrackAaxis.X:
                     _tempDir.y = 0;
@@ -101,19 +102,20 @@ namespace AkshanshKanojia.Controllers.PointClick
                 }
                 transform.position = _tempPlayerPos;
             }
-            if(_tempDir.magnitude<0.2f)
+            if (_tempDir.magnitude < 0.2f)
             {
                 isTracking = false;
                 OnReached?.Invoke();
             }
 
             //rotation
-            RotationManager(_tempDir);
+            if (RotatePlayerWhileMoving)
+                RotationManager(_tempDir);
         }
 
         void ClampedValue(int _axisIndex)
         {
-            switch(_axisIndex)
+            switch (_axisIndex)
             {
                 case 0:
                     curtTarget.x = transform.position.x;
@@ -128,7 +130,7 @@ namespace AkshanshKanojia.Controllers.PointClick
                     break;
             }
         }
-        float CustomClamp(float _pos,float _min,float _max,int _axisIndex)//for getting event when clamped
+        float CustomClamp(float _pos, float _min, float _max, int _axisIndex)//for getting event when clamped
         {
             if (_pos < _min)
             {
@@ -145,9 +147,16 @@ namespace AkshanshKanojia.Controllers.PointClick
 
         private void RotationManager(Vector3 _tempDir)
         {
-            transform.rotation = Quaternion.Slerp(Quaternion.Euler(transform.eulerAngles), Quaternion.LookRotation(_tempDir),
+            GameObject _tempRotTarget = (SeprateRotBody) ? RotObj : gameObject;
+            if (!_tempRotTarget && SeprateRotBody)
+            {
+                print("No rotation body assigned for " + gameObject.name + " Point Click Manager! Using self as target.");
+                _tempRotTarget = gameObject;
+            }
+
+            _tempRotTarget.transform.rotation = Quaternion.Slerp(Quaternion.Euler(_tempRotTarget.transform.eulerAngles), Quaternion.LookRotation(_tempDir),
                 Time.deltaTime * RotSpeed);
-            Vector3 _tempRotAxis = transform.eulerAngles;
+            Vector3 _tempRotAxis = _tempRotTarget.transform.eulerAngles;
             if (ClampRotation)
             {
                 _tempRotAxis.x = Mathf.Clamp(_tempRotAxis.x, MinRotationClamp.x, MaxRotationClamp.x);
@@ -180,7 +189,7 @@ namespace AkshanshKanojia.Controllers.PointClick
                 default:
                     break;
             }
-            transform.eulerAngles = _tempRotAxis;
+            _tempRotTarget.transform.eulerAngles = _tempRotAxis;
         }
 
         public void SetTarget(Vector3 _dir)
