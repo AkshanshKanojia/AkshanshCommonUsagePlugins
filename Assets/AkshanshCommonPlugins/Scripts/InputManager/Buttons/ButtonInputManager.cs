@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace AkshanshKanojia.Inputs.Button
 {
-    public class ButtonInputManager : MobileInputs, IPointerClickHandler, IPointerUpHandler, IPointerDownHandler
+    public class ButtonInputManager : MobileInputs, IPointerUpHandler, IPointerDownHandler
     {
         [SerializeField] enum AvailableObjectTypes { UIObject, Object2d, Object3d }
         [SerializeField] AvailableObjectTypes CurtType;
@@ -132,14 +132,6 @@ namespace AkshanshKanojia.Inputs.Button
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if(CurtType == AvailableObjectTypes.UIObject)
-            {
-                OnTap?.Invoke(gameObject);
-            }
-        }
-
         public void OnPointerUp(PointerEventData eventData)
         {
             if (CurtType == AvailableObjectTypes.UIObject)
@@ -154,6 +146,7 @@ namespace AkshanshKanojia.Inputs.Button
             if (CurtType == AvailableObjectTypes.UIObject)
             {
                 isHeld = true;
+                OnTap?.Invoke(gameObject);
             }
         }
         #endregion
