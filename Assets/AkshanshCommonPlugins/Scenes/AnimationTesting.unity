@@ -456,8 +456,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19bb4d4ea658e5b43afbb3334d26b99e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SequenceInArray: []
+  SequenceInArray:
+  - TargetObject: {fileID: 1113347914}
+    TargetPos: {x: 0, y: 1, z: 0}
+    TargetRot: {x: 0, y: 0, z: 0}
+    TargetScale: {x: 1, y: 1, z: 1}
+    SequenceID: 0
+    SequenceStartDelay: 0
+    TrackSpeed: 2
+    MoveOnLocalAxis: 0
+  - TargetObject: {fileID: 1113347914}
+    TargetPos: {x: 5, y: 4, z: 0}
+    TargetRot: {x: 0, y: 0, z: 0}
+    TargetScale: {x: 0.5, y: 0.5, z: 10}
+    SequenceID: 0
+    SequenceStartDelay: 0
+    TrackSpeed: 2
+    MoveOnLocalAxis: 0
+  - TargetObject: {fileID: 1113347914}
+    TargetPos: {x: 0, y: 1, z: 0}
+    TargetRot: {x: 0, y: 0, z: 0}
+    TargetScale: {x: 1, y: 1, z: 1}
+    SequenceID: 0
+    SequenceStartDelay: 0
+    TrackSpeed: 2
+    MoveOnLocalAxis: 0
   playOnAwake: 1
+  loopSequence: 1
+  objCont: {fileID: 0}
 --- !u!1 &1769552740
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,6 +513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f2b85b8faccd546bd0444cf928c9e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stoppingDist: 0.2
 --- !u!4 &1769552742
 Transform:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
-using UnityEngine;
-using System.Collections.Generic;
 using AkshanshKanojia.Controllers.ObjectManager;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace AkshanshKanojia.Animations
 {
@@ -16,31 +16,31 @@ namespace AkshanshKanojia.Animations
         public class SequenceDataHolder
         {
             public GameObject TargetObject;
-            public Vector3 TargetPos,TargetRot;
+            public Vector3 TargetPos, TargetRot, TargetScale = Vector3.one;
             [Tooltip("Use this to get id to identify if specific event is finished.")]
             public int SequenceID = 0;
-            public float SequenceStartDelay = 0,TrackSpeed = 3f;
+            public float SequenceStartDelay = 0, TrackSpeed = 3f;
             public bool MoveOnLocalAxis = false;
         }
         [SerializeField] SequenceDataHolder[] SequenceInArray;
-        [SerializeField] bool playOnAwake = true;
-        
+        [SerializeField] bool playOnAwake = true, loopSequence = false;
+
         SequenceDataHolder tempTargetSequence;
         Queue<SequenceDataHolder> CurrentSequences;
 
-
-
-        ObjectController objCont;
-        bool isActive = true,posReached,rotReached;
+        [SerializeField] ObjectController objCont;
+        bool isActive = true, posReached, rotReached, scaleReached;
 
         private void Start()
         {
             Initialize();
         }
 
+        //checks if object controller is present and resets animation stack
         private void Initialize()
         {
-            objCont = FindObjectOfType<ObjectController>();
+            if (!objCont)
+                objCont = FindObjectOfType<ObjectController>();
             if (!objCont)
             {
                 Debug.LogWarning("Can not find object controller, transform sequencer will not work!");
@@ -57,6 +57,7 @@ namespace AkshanshKanojia.Animations
                 {
                     objCont.OnMovementEnd += OnPosReached;
                     objCont.OnRotationEnd += OnRotReached;
+                    objCont.OnScaleEnd += OnScaleReached;
                 }
                 if (playOnAwake)
                 {
@@ -64,7 +65,7 @@ namespace AkshanshKanojia.Animations
                 }
             }
         }
-
+        //checks if specified target position has been reached in current active sequence
         void OnPosReached(GameObject _go)
         {
             if (_go != tempTargetSequence.TargetObject)
@@ -79,35 +80,52 @@ namespace AkshanshKanojia.Animations
             rotReached = true;
             CheckSequenceStatus();
         }
+        void OnScaleReached(GameObject _go)
+        {
+            if (_go != tempTargetSequence.TargetObject)
+                return;
+            scaleReached = true;
+            CheckSequenceStatus();
+        }
 
+        //check if all conditions in sequence has been fullfilled
         void CheckSequenceStatus()
         {
-            if(posReached&&rotReached)
+            if (posReached && rotReached && scaleReached)
             {
                 OnSequenceEnd?.Invoke(tempTargetSequence.SequenceID);
                 UpdateCurrentSequence();
             }
         }
+        //add next sequence as target and stops/repeats it if all sequences are finished based on parameters
         void UpdateCurrentSequence()
         {
-            if(CurrentSequences.Count<=0)
+            if (CurrentSequences.Count <= 0)
             {
-                isActive = false;
+
                 objCont.OnMovementEnd -= OnPosReached;
                 objCont.OnRotationEnd -= OnRotReached;
+                objCont.OnScaleEnd -= OnScaleReached;
+                if (loopSequence)
+                {
+                    Initialize();
+                    return;
+                }
+                isActive = false;
                 OnSequenceListEnd?.Invoke();
                 return;
             }
             tempTargetSequence = CurrentSequences.Dequeue();
             posReached = false;
             rotReached = false;
+            scaleReached = false;
             StartCoroutine(StartSequenceQueue(tempTargetSequence.SequenceStartDelay));
         }
         IEnumerator<WaitForSeconds> StartSequenceQueue(float _tempWaitDuration)
         {
             yield return new WaitForSeconds(_tempWaitDuration);
-            objCont.AddEvent(tempTargetSequence.TargetObject, tempTargetSequence.TargetPos,Quaternion.Euler(tempTargetSequence.TargetRot),
-                tempTargetSequence.TrackSpeed, tempTargetSequence.MoveOnLocalAxis);
+            objCont.AddEvent(tempTargetSequence.TargetObject, tempTargetSequence.TargetPos, Quaternion.Euler(tempTargetSequence.TargetRot),
+                tempTargetSequence.TargetScale, tempTargetSequence.TrackSpeed, tempTargetSequence.MoveOnLocalAxis);
         }
     }
 }

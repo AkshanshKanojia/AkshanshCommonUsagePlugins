@@ -58,9 +58,9 @@ namespace AkshanshKanojia.LevelEditors
                             Gizmos.DrawSphere(v, vertSize);
                         }
                     }
-                    if(showMidPoint)
+                    if (showMidPoint)
                     {
-                        foreach(var v in cells)
+                        foreach (var v in cells)
                         {
                             Gizmos.DrawSphere(v.midPos, vertSize);
                         }
@@ -73,13 +73,14 @@ namespace AkshanshKanojia.LevelEditors
             }
 
         }
+        // gets information of cells formed by 4 vertices of grid
         void GetCellData()
         {
             cells.Clear();
-            int _zFixIndex = 0;
+            int _zFixIndex = 0;//with each itteration z value falls behind 1 to fix the index this is used
             for (int i = 0; i < (xSize - 1) * (zSize - 1); i++)
             {
-                if (i % (zSize - 1) == 0 && i != 0)
+                if (i % (zSize - 1) == 0 && i != 0)// ie one row is finished since it is stored in 1d array
                 {
                     _zFixIndex++;
                 }
@@ -94,9 +95,15 @@ namespace AkshanshKanojia.LevelEditors
                 cells.Add(_temp);
             }
         }
+
         #endregion
 
         #region public methods
+        public Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles)
+        {
+            return Quaternion.Euler(angles) * (point - pivot) + pivot;
+        }
+        // generates the grid vertices
         public void GenerateGrid()
         {
             gridVertices = new Vector3[xSize * zSize];
@@ -109,8 +116,11 @@ namespace AkshanshKanojia.LevelEditors
                 for (int j = 0; j < zSize; j++)
                 {
                     gridVertices[_tempVertIndex] = new Vector3(i, 0, j) * cellSize + _tempTransform;
-                    gridVertices[_tempVertIndex] = transform.rotation *
-                        gridVertices[_tempVertIndex];//apply rotation on vector
+                    if (updateWithObjectTransform)
+                    {
+                        gridVertices[_tempVertIndex] = RotatePointAroundPivot(gridVertices[_tempVertIndex],
+                            transform.position,transform.eulerAngles);//apply rotation on vector
+                    }
                     _tempVertIndex++;
                 }
             }
@@ -139,7 +149,7 @@ namespace AkshanshKanojia.LevelEditors
             return -1;
         }
 
-        public void SetGridSize(int _x,int _z)
+        public void SetGridSize(int _x, int _z)
         {
             xSize = _x;
             zSize = _z;
@@ -149,6 +159,10 @@ namespace AkshanshKanojia.LevelEditors
         {
             cellSize = _size;
             GenerateGrid();
+        }
+        public Vector3[] GetVerticeData()
+        {
+            return gridVertices;
         }
         #endregion
     }

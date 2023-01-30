@@ -1,10 +1,11 @@
-using UnityEditor;
-using UnityEngine;
-using System.Collections.Generic;
-using AkshanshKanojia.Inputs.Mobile;
 using AkshanshKanojia.Controllers;
 using AkshanshKanojia.Controllers.CameraController;
 using AkshanshKanojia.Controllers.ObjectManager;
+using AkshanshKanojia.Inputs.Mobile;
+using AkshanshKanojia.Animations;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 namespace AkshanshKanojia.PluginManager
 {
     public class PluginToolEditor : EditorWindow
@@ -42,7 +43,7 @@ namespace AkshanshKanojia.PluginManager
             }
             if (GUILayout.Button("Generate Character Manager", GUILayout.Width(200), GUILayout.Height(20)))
             {
-                if(FindObjectOfType<CharacterSetupManager>())
+                if (FindObjectOfType<CharacterSetupManager>())
                 {
                     Debug.LogWarning("Character Setup Manager already exist!");
                     return;
@@ -63,7 +64,7 @@ namespace AkshanshKanojia.PluginManager
                 if (FindObjectOfType<Camera>())
                 {
                     FindObjectOfType<Camera>().gameObject.AddComponent<CameraManager>();
-                    Debug.Log("Added Camera Manager to existing camera: "+FindObjectOfType<CameraManager>().name);
+                    Debug.Log("Added Camera Manager to existing camera: " + FindObjectOfType<CameraManager>().name);
                 }
                 else
                 {
@@ -80,7 +81,13 @@ namespace AkshanshKanojia.PluginManager
                 _tempObj.AddComponent<ObjectController>();
                 Debug.Log("Generated Object Controller!");
             }
-                if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
+            if (GUILayout.Button("Generate Transform Sequencer", GUILayout.Width(200), GUILayout.Height(20)))
+            {
+                GameObject _tempObj = new GameObject("Transform Sequence Manager");
+                _tempObj.AddComponent<TransformSequencer>();
+                Debug.Log("Generated Transform Sequencer!");
+            }
+            if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
             {
                 GetWindow<PluginToolEditor>().Close();
             }
