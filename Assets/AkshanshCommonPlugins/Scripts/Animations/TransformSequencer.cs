@@ -33,6 +33,7 @@ namespace AkshanshKanojia.Animations
 
         private void Start()
         {
+            isActive = playOnAwake;
             Initialize();
         }
 
@@ -126,6 +127,13 @@ namespace AkshanshKanojia.Animations
             yield return new WaitForSeconds(_tempWaitDuration);
             objCont.AddEvent(tempTargetSequence.TargetObject, tempTargetSequence.TargetPos, Quaternion.Euler(tempTargetSequence.TargetRot),
                 tempTargetSequence.TargetScale, tempTargetSequence.TrackSpeed, tempTargetSequence.MoveOnLocalAxis);
+        }
+
+        public void Play()
+        {
+            isActive = true;
+            Initialize();
+            UpdateCurrentSequence();
         }
     }
 }
