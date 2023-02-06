@@ -29,14 +29,13 @@ namespace AkshanshKanojia.Animations
         Queue<SequenceDataHolder> CurrentSequences;
 
         [SerializeField] ObjectController objCont;
-        bool isActive = true, posReached, rotReached, scaleReached;
+        bool isActive = true, posReached, rotReached, scaleReached,isPaused;
 
         private void Start()
         {
             isActive = playOnAwake;
             Initialize();
         }
-
         //checks if object controller is present and resets animation stack
         private void Initialize()
         {
@@ -92,6 +91,8 @@ namespace AkshanshKanojia.Animations
         //check if all conditions in sequence has been fullfilled
         void CheckSequenceStatus()
         {
+            if (isPaused)
+                return;
             if (posReached && rotReached && scaleReached)
             {
                 OnSequenceEnd?.Invoke(tempTargetSequence.SequenceID);
@@ -128,7 +129,16 @@ namespace AkshanshKanojia.Animations
             objCont.AddEvent(tempTargetSequence.TargetObject, tempTargetSequence.TargetPos, Quaternion.Euler(tempTargetSequence.TargetRot),
                 tempTargetSequence.TargetScale, tempTargetSequence.TrackSpeed, tempTargetSequence.MoveOnLocalAxis);
         }
-
+        public void PauseSequence()
+        {
+            isPaused = true;
+            CheckSequenceStatus();
+        }
+        public void ResumeSequecnce()
+        {
+            isPaused = false;
+            CheckSequenceStatus();
+        }
         public void Play()
         {
             isActive = true;
