@@ -8,20 +8,24 @@ namespace AkshanshKanojia.LevelEditors
         #region Serialized Fields
         [Header("Grid Properties")]
         [SerializeField] float cellSize = 1f;
-        [SerializeField] bool updateWithObjectTransform;
-
         [SerializeField]
         int xSize = 10, zSize = 10;
 
-        [Header("Editor Properties")]
-        [SerializeField] bool showInEditor = true, showMidPoint = false;
-        [SerializeField] Color vertColor;
-        [SerializeField] float vertSize = 1f;
+        
         #endregion
 
         #region Private Fields
         Vector3[] gridVertices;
         #endregion
+
+        #region Public Fields
+        [Header("Editor Properties")]
+        public Color vertColor;
+        public float vertSize = 1f;
+
+        public bool showInEditor = true, showMidPoint = false, updateWithObjectTransform;
+        #endregion
+
 
         //can be used to genrate faces if needed later
         [System.Serializable]
@@ -119,7 +123,7 @@ namespace AkshanshKanojia.LevelEditors
                     if (updateWithObjectTransform)
                     {
                         gridVertices[_tempVertIndex] = RotatePointAroundPivot(gridVertices[_tempVertIndex],
-                            transform.position,transform.eulerAngles);//apply rotation on vector
+                            transform.position, transform.eulerAngles);//apply rotation on vector
                     }
                     _tempVertIndex++;
                 }
