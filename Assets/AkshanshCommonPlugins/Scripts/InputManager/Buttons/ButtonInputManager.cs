@@ -62,7 +62,7 @@ namespace AkshanshKanojia.Inputs.Button
                     RaycastHit2D _hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(_data.TouchPosition),Mathf.Infinity,RaycastLayer);
                     if (_hit)
                     {
-                        if (_hit.collider == GetComponent<Collider>())
+                        if (_hit.collider == GetComponent<Collider2D>())
                         {
                             isTapped = true;
                             OnTap?.Invoke(gameObject);
@@ -94,7 +94,7 @@ namespace AkshanshKanojia.Inputs.Button
                     RaycastHit2D _hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(_data.TouchPosition),Mathf.Infinity,RaycastLayer);
                     if (_hit)
                     {
-                        if (_hit.collider == GetComponent<Collider>())
+                        if (_hit.collider == GetComponent<Collider2D>())
                         {
                             OnHeld?.Invoke(gameObject);
                         }
