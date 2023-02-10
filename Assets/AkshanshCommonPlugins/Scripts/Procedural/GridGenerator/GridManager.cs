@@ -96,6 +96,7 @@ namespace AkshanshKanojia.LevelEditors
                     bottomRight = gridVertices[i + zSize + _zFixIndex]
                 };
                 _temp.GetMidPoint();
+                _temp.midPos = RotatePointAroundPivot(_temp.midPos, transform.position, transform.eulerAngles);
                 cells.Add(_temp);
             }
         }
@@ -111,6 +112,7 @@ namespace AkshanshKanojia.LevelEditors
         public void GenerateGrid()
         {
             gridVertices = new Vector3[xSize * zSize];
+            if(cells!=null)
             cells.Clear();
             //generate all vertices
             int _tempVertIndex = 0;

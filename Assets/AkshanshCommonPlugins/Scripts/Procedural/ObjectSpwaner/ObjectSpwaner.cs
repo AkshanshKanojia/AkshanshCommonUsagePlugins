@@ -36,6 +36,7 @@ namespace AkshanshKanojia.LevelEditors
 
         void Initalize()
         {
+            gridMang = GetComponent<GridManager>();
             if (!gridMang)
                 gridMang = gameObject.AddComponent<GridManager>();
             gridMang.hideFlags = HideFlags.HideInInspector;
