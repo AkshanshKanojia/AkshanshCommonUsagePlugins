@@ -9,7 +9,7 @@ namespace AkshanshKanojia.LevelEditors
         [Header("Grid Properties")]
         [SerializeField] float cellSize = 1f;
         [SerializeField]
-        int xSize = 10, zSize = 10;
+        uint xSize = 10, zSize = 10;
 
         
         #endregion
@@ -157,8 +157,8 @@ namespace AkshanshKanojia.LevelEditors
 
         public void SetGridSize(int _x, int _z)
         {
-            xSize = _x;
-            zSize = _z;
+            xSize = (uint)_x;
+            zSize = (uint)_z;
             GenerateGrid();
         }
         public void SetCellSize(float _size)

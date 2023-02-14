@@ -16,9 +16,11 @@ namespace AkshanshKanojia.LevelEditors
         [HideInInspector] public int GridXSize = 10,GridZSize = 10;
         [HideInInspector] public bool RandomizeInsideCell = false;
         //Generation Properties
-        [HideInInspector] public bool AvoidObjectOverlaps,SkipOnOverlap;
+        [HideInInspector] public bool AvoidObjectOverlaps,SkipOnOverlap,GenerateInExistingObject;
         [HideInInspector] public float OverlapDetectionRadius = 1f;
         [HideInInspector] public int MaxOverlapItteration = 10;
+        public GameObject[] SpwanablePrefabs;
+        [HideInInspector] public string HolderName = "Generated props";
         //debug properties
         [HideInInspector] public bool ShowGrid;
         [HideInInspector] public float GridVertSize = 0.1f;
@@ -34,7 +36,7 @@ namespace AkshanshKanojia.LevelEditors
         GridManager gridMang;
         #endregion
 
-        void Initalize()
+        void Initalize()//generates basic componenets required for generation
         {
             gridMang = GetComponent<GridManager>();
             if (!gridMang)
@@ -47,10 +49,19 @@ namespace AkshanshKanojia.LevelEditors
             gridMang.updateWithObjectTransform = true;
             gridMang.GenerateGrid();
         }
-        public void GenerateObjects()
+        public void GenerateObjects()//generates object based on generation type
         {
             Initalize();
-            print("done now die");
+            switch(GenerationMode)
+            {
+                case AvailableGenerationModes.OrderedGrid:
+                    #region Ordered grid Gen
+                    
+                    #endregion
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void SetGridDebug()
