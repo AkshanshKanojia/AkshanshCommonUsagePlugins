@@ -20,7 +20,12 @@ namespace AkshanshKanojia.EditorTools
                     _tempMang.ChildstartingPos = EditorGUILayout.FloatField("Starting Position", _tempMang.ChildstartingPos);
                     _tempMang.ArrangeChildInLocalSpace = EditorGUILayout.Toggle("Use Local Space",_tempMang.ArrangeChildInLocalSpace);
                     _tempMang.UseNegetiveAxis = EditorGUILayout.Toggle("Use Negetive Axis",_tempMang.UseNegetiveAxis);
-                    if(GUILayout.Button("Sort Children"))
+                    _tempMang.AutoAlignInCenter= EditorGUILayout.Toggle("Auto-Align Center",_tempMang.AutoAlignInCenter);
+                    if(_tempMang.AutoAlignInCenter)
+                    {
+                        _tempMang.CenterPosRef = EditorGUILayout.FloatField("Center Reference", _tempMang.CenterPosRef);
+                    }
+                    if (GUILayout.Button("Sort Children"))
                     {
                         _tempMang.SortChildrenSpacing();
                     }
