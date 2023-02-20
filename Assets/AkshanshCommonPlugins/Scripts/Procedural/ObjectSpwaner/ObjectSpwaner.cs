@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace AkshanshKanojia.LevelEditors
 {
@@ -14,12 +15,18 @@ namespace AkshanshKanojia.LevelEditors
         //grid properties
         [HideInInspector] public float GridCellSize = 1f;
         [HideInInspector] public int GridXSize = 10,GridZSize = 10;
-        [HideInInspector] public bool RandomizeInsideCell = false;
+        [HideInInspector] public bool RandomizeInsideCell = false,MatchSurfaceHeight = false;
         //Generation Properties
         [HideInInspector] public bool AvoidObjectOverlaps,SkipOnOverlap,GenerateInExistingObject;
-        [HideInInspector] public float OverlapDetectionRadius = 1f;
         [HideInInspector] public int MaxOverlapItteration = 10;
-        public GameObject[] SpwanablePrefabs;
+
+        [System.Serializable]
+        public struct SpwanableObjectHolder
+        {
+            public GameObject ObjectPrefab;
+            public float ObjectAvoidanceRadius;
+        }
+        public SpwanableObjectHolder[] SpwanablePrefabs;
         [HideInInspector] public string HolderName = "Generated props";
         //debug properties
         [HideInInspector] public bool ShowGrid;
@@ -33,7 +40,16 @@ namespace AkshanshKanojia.LevelEditors
         #endregion
 
         #region Private Fields
+        [System.Serializable]
+        struct GeneratedObjectData
+        {
+            public GameObject TargetObj;
+            public Vector3 SpawnPos;
+        }
+
+        List<GeneratedObjectData> CurtActiveObjects;
         GridManager gridMang;
+        enum ObjectGenrationFilters { FixedInRadius,RandomInRadius}
         #endregion
 
         void Initalize()//generates basic componenets required for generation
@@ -49,14 +65,45 @@ namespace AkshanshKanojia.LevelEditors
             gridMang.updateWithObjectTransform = true;
             gridMang.GenerateGrid();
         }
+
+        /// <summary>
+        /// Generates a single object depending onnvalues passed initilly on list
+        /// </summary>
+        bool GenerateSingleObject(ObjectGenrationFilters _filter)
+        {
+            if (CurtActiveObjects.Count >= gridMang.cells.Count)
+            {
+                Debug.LogWarning("Breaking Generation at " + CurtActiveObjects.Count + " beacuse it exceeds grid size!");
+                return false;
+            }
+            int _genIndex = Random.Range(0, SpwanablePrefabs.Length);
+            Transform _tempObj = Instantiate(SpwanablePrefabs[_genIndex].ObjectPrefab).transform;
+            _tempObj.position = gridMang.cells[CurtActiveObjects.Count].midPos;
+            if(_filter == ObjectGenrationFilters.RandomInRadius)
+            {//Note: do surface raycasting first :D
+                //randomize pos
+              // _tempObj.position += 
+            }
+            CurtActiveObjects.Add(new GeneratedObjectData
+            {
+                TargetObj = _tempObj.gameObject,
+            });
+            return true;
+        }
+
         public void GenerateObjects()//generates object based on generation type
         {
             Initalize();
+            CurtActiveObjects = new List<GeneratedObjectData>();
             switch(GenerationMode)
             {
                 case AvailableGenerationModes.OrderedGrid:
                     #region Ordered grid Gen
-                    
+                    //generation
+                    for(int i=0;i<MaxObjectsToGenerate;i++)
+                    {
+                        GenerateSingleObject(ObjectGenrationFilters.FixedInRadius);
+                    }
                     #endregion
                     break;
                 default:

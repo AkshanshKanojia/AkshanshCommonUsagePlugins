@@ -39,7 +39,6 @@ namespace AkshanshKanojia.LevelEditors
                     {
                         EditorGUILayout.HelpBox("Make sure objects you are spwaning have a collider in it " +
                             "to detect overlapping!", MessageType.Info);
-                        _tempMang.OverlapDetectionRadius = EditorGUILayout.FloatField("Overlap Avoidance Range", _tempMang.OverlapDetectionRadius);
                         _tempMang.MaxOverlapItteration = EditorGUILayout.IntSlider("Max Avoidance itteration", _tempMang.MaxOverlapItteration, 1, 1000);
                         _tempMang.SkipOnOverlap = EditorGUILayout.Toggle("Skip On Overlap", _tempMang.SkipOnOverlap);
                     }
