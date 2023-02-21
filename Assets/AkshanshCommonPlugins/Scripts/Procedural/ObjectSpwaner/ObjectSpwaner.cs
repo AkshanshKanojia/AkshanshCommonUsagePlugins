@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace AkshanshKanojia.LevelEditors
 {
+    //edit size values to avoid -ve numbers
     public class ObjectSpwaner : MonoBehaviour
     {
         #region Public Fields
