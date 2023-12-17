@@ -59,7 +59,7 @@ public class TweenAnimationManager : MonoBehaviour
         CheckSequenceTransistion();
     }
 
-    private void AssignRefrences()
+    internal void AssignRefrences()
     {
         _targetTransform = _targetTransform != null ? _targetTransform : transform;
         targetRectTrans = targetRectTrans ? targetRectTrans :
@@ -232,6 +232,7 @@ public class TweenAnimationEditor : Editor
         if (GUILayout.Button("Add Key"))
         {
             animationMang.tweenSequenceList ??= new List<TweenAnimationManager.TweenDataHolder>();
+            animationMang.AssignRefrences();
 
             var tempTargetVector = animationMang.keyTweenType switch
             {
