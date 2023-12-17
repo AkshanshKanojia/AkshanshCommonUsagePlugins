@@ -81,12 +81,6 @@ namespace AkshanshKanojia.PluginManager
                 _tempObj.AddComponent<ObjectController>();
                 Debug.Log("Generated Object Controller!");
             }
-            if (GUILayout.Button("Generate Transform Sequencer", GUILayout.Width(200), GUILayout.Height(20)))
-            {
-                GameObject _tempObj = new GameObject("Transform Sequence Manager");
-                _tempObj.AddComponent<TransformSequencer>();
-                Debug.Log("Generated Transform Sequencer!");
-            }
             if (GUILayout.Button("Close", GUILayout.Width(100), GUILayout.Height(20)))
             {
                 GetWindow<PluginToolEditor>().Close();
